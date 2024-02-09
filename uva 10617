@@ -1,0 +1,44 @@
+//Explanation:
+// Link:https://vjudge.net/problem/UVA-10617/origin
+// Type: Interval dp.
+// Solution:
+// 1. s[i] = = S[j] Remove s[i], then a sub-problem is dp[i+1, j]; Remove S[j], another sub-problem is dp[i, j-1];
+// Obviously the two sub-problems overlap, the overlapping part is dp[i+1, j-1], so subtract this part.
+// If S[i], s[j] do not remove it? Because s[i] = = S[j], s[i] and s[j] make up a substring of the text string, and S[i],s[j] and dp[i+1, J-1]
+// All of the sub-strings contained inside the string are formed into a string of words, then the solution of this sub-problem is obviously dp[i+1, j-1] + 1.
+// So there will be dp[i][j] = Dp[i+1][j] + dp[i][j-1] + dp[i+1, j-1] + 1-dp[i+1, j-1];
+// Simplification for dp[i][j] = Dp[i+1][j] + dp[i][j-1] + 1;
+// 2. s[i]! = S[j] At this time the sub-problem is simpler than the above, because S[i] s[j] and dp[i+1, J-1] The palindrome string does not constitute a palindrome.
+// So dp[i][j] = Dp[i+1][j] + dp[i][j-1]-dp[i+1][j-1];
+
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define mod 1000000007
+string s;
+ll n, dp[60][60];
+
+ll f(ll i, ll j) {
+	if (i > j) {
+		return 0;
+	}
+	if (dp[i][j] != -1)return dp[i][j];
+	ll ans = f(i + 1, j) + f(i, j - 1) - f(i + 1, j - 1);
+	if (s[i] == s[j]) {
+		ans += f(i + 1, j - 1) + 1;
+	}
+	return dp[i][j] = ans;
+}
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(0); cout.tie(0);
+	ll t;
+	cin >> t;
+	while (t--) {
+		cin >> s;
+		n = s.size();
+		memset(dp, -1, sizeof(dp));
+		cout << f(0, n - 1) << "\n";
+	}
+}
